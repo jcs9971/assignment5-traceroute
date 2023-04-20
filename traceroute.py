@@ -69,6 +69,9 @@ def build_packet():
     packet = header + data
     return packet
 
+# constants
+IPPROTO_IP = socket.IPPROTO_IP
+IP_TTL = socket.IP_TTL
 
 def get_route(hostname):
     timeLeft = TIMEOUT
