@@ -108,7 +108,7 @@ def get_route(hostname):
 
             else:
                 icmpHeader = recvPacket[20:28]
-                types, code, checksum, packetID, sequence = struct.unpack("bbHHh", icmpHeader)
+                requestType, code, checksum, packetID, sequence = struct.unpack("bbHHh", icmpHeader)
                 # Fetch the icmp type from the IP packet
                 try:  # try to fetch the hostname of the router that returned the packet - don't confuse with the hostname that you are tracing
                     addr = addr[0]
@@ -117,7 +117,7 @@ def get_route(hostname):
                 except herror:  # if the router host does not provide a hostname use "hostname not returnable"
                     hostname = "hostname not returnable"
 
-                if types == 11:
+                if requestType == 11:
                     bytes = struct.calcsize("d")
                     timeSent = struct.unpack("d", recvPacket[28:28 +
                                                                 bytes])[0]
@@ -126,7 +126,7 @@ def get_route(hostname):
                                     'Response Code': 'ttl exceeded'}, ignore_index=True)
                     # You should update your dataframe with the required column field responses here
 
-                elif types == 3:
+                elif requestType == 3:
                     bytes = struct.calcsize("d")
                     timeSent = struct.unpack("d", recvPacket[28:28 + bytes])[0]
 
@@ -134,7 +134,7 @@ def get_route(hostname):
                                     'Response Code': 'destination unreachable'}, ignore_index=True)
                     # You should update your dataframe with the required column field responses here
 
-                elif types == 0:
+                elif requestType == 0:
                     bytes = struct.calcsize("d")
                     timeSent = struct.unpack("d", recvPacket[28:28 + bytes])[0]
 
