@@ -60,18 +60,15 @@ def build_packet():
     # Don’t send the packet yet , just return the final packet in this function.
 
     if sys.platform == 'darwin':
-        # Convert 16-bit integers from host to network byte order
-        myChecksum = htons(myChecksum) & 0xffff
+        # Convert 16-bit integers from host to network  byte order
+        myChecksum = socket.htons(myChecksum) & 0xffff
     else:
-        myChecksum = htons(myChecksum)
+        myChecksum = socket.htons(myChecksum)
 
-    # So the function ending should look like this
+    header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, myChecksum, ID, 1)
     packet = header + data
     return packet
 
-# constants
-IPPROTO_IP = socket.IPPROTO_IP
-IP_TTL = socket.IP_TTL
 
 def get_route(hostname):
     timeLeft = TIMEOUT
@@ -86,7 +83,7 @@ def get_route(hostname):
 
             # Make a raw socket named mySocket
 
-            mySocket.setsockopt(IPPROTO_IP, IP_TTL, struct.pack('I', ttl))
+            mySocket.setsockopt(socket.IPPROTO_IP, socket.IP_TTL, struct.pack('I', ttl))
             mySocket.settimeout(TIMEOUT)
             try:
                 d = build_packet()
