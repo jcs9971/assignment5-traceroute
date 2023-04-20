@@ -1,4 +1,4 @@
-import socket
+from socket import *
 import os
 import sys
 import struct
@@ -94,7 +94,7 @@ def get_route(hostname):
                     resp = [[ttl, tries + 1, '*', '*', 'timeout']]
                     new_df = pd.DataFrame(resp, columns=['Hop Count', 'Try', 'IP', 'Hostname', 'Response Code'])
                     df = pd.concat([df, new_df], ignore_index=True)
-                    
+
                 recvPacket, addr = mySocket.recvfrom(1024)
                 timeReceived = time.time()
                 timeLeft = timeLeft - howLongInSelect
