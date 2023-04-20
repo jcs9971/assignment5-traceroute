@@ -9,8 +9,8 @@ import pandas as pd
 
 ICMP_ECHO_REQUEST = 8
 MAX_HOPS = 60
-TIMEOUT = 3.0
-TRIES = 2
+TIMEOUT = 2.0
+TRIES = 1
 
 
 # The packet that we shall send to each router along the path is the ICMP echo
@@ -59,6 +59,12 @@ def build_packet():
     myChecksum = checksum(header + data)
     # Don’t send the packet yet , just return the final packet in this function.
 
+    if sys.platform == 'darwin':
+        # Convert 16-bit integers from host to network byte order
+        myChecksum = htons(myChecksum) & 0xffff
+    else:
+        myChecksum = htons(myChecksum)
+
     # So the function ending should look like this
     packet = header + data
     return packet
@@ -77,6 +83,7 @@ def get_route(hostname):
 
             icmp = socket.getprotobyname("icmp")
             mySocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, icmp)
+
             # Make a raw socket named mySocket
 
             mySocket.setsockopt(IPPROTO_IP, IP_TTL, struct.pack('I', ttl))
