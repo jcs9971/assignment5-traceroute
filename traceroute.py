@@ -1,4 +1,4 @@
-from socket import *
+import socket
 import os
 import sys
 import struct
@@ -68,7 +68,7 @@ def build_packet():
 def get_route(hostname):
     timeLeft = TIMEOUT
     df = pd.DataFrame(columns=['Hop Count', 'Try', 'IP', 'Hostname', 'Response Code'])
-    destAddr = gethostbyname(hostname)
+    destAddr = socket.gethostbyname(hostname)
 
     for ttl in range(1, MAX_HOPS):
         for tries in range(TRIES):
