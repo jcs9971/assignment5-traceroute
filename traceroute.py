@@ -50,11 +50,11 @@ def build_packet():
     # Append checksum to the header.
 
     myChecksum = 0
+    ID = os.getpid() & 0xFFFF
     # Make a dummy header with a 0 checksum
     # struct -- Interpret strings as packed binary data
     header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, myChecksum, ID, 1)
     data = struct.pack("d", time.time())
-    ID = os.getpid() & 0xFFFF
     # Calculate the checksum on the data and the dummy header.
     myChecksum = checksum(header + data)
     # Don’t send the packet yet , just return the final packet in this function.
