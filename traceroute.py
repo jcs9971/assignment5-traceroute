@@ -70,7 +70,7 @@ def build_packet():
     return packet
 
 # constants
-IPPROTO_ICMP = socket.IPPROTO_ICMP
+IPPROTO_IP = socket.IPPROTO_IP
 IP_TTL = socket.IP_TTL
 
 def get_route(hostname):
@@ -86,7 +86,7 @@ def get_route(hostname):
 
             # Make a raw socket named mySocket
 
-            mySocket.setsockopt(IPPROTO_ICMP, IP_TTL, struct.pack('I', ttl))
+            mySocket.setsockopt(IPPROTO_IP, IP_TTL, struct.pack('I', ttl))
             mySocket.settimeout(TIMEOUT)
             try:
                 d = build_packet()
