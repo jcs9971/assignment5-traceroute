@@ -72,17 +72,17 @@ def build_packet():
 def get_route(hostname):
     timeLeft = TIMEOUT
     df = pd.DataFrame(columns=['Hop Count', 'Try', 'IP', 'Hostname', 'Response Code'])
-    destAddr = socket.gethostbyname(hostname)
+    destAddr = gethostbyname(hostname)
 
     for ttl in range(1, MAX_HOPS):
         for tries in range(TRIES):
 
-            icmp = socket.getprotobyname("icmp")
-            mySocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, icmp)
+            icmp = getprotobyname("icmp")
+            mySocket = socket(AF_INET, SOCK_DGRAM, icmp)
 
             # Make a raw socket named mySocket
 
-            mySocket.setsockopt(socket.IPPROTO_IP, socket.IP_TTL, struct.pack('I', ttl))
+            mySocket.setsockopt(IPPROTO_IP, IP_TTL, struct.pack('I', ttl))
             mySocket.settimeout(TIMEOUT)
             try:
                 d = build_packet()
