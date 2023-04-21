@@ -69,10 +69,6 @@ def build_packet():
     packet = header + data
     return packet
 
-# constants
-IPPROTO_IP = socket.IPPROTO_IP
-IP_TTL = socket.IP_TTL
-
 def get_route(hostname):
     timeLeft = TIMEOUT
     df = pd.DataFrame(columns=['Hop Count', 'Try', 'IP', 'Hostname', 'Response Code'])
@@ -86,7 +82,7 @@ def get_route(hostname):
 
             # Make a raw socket named mySocket
 
-            mySocket.setsockopt(IPPROTO_IP, IP_TTL, struct.pack('I', ttl))
+            mySocket.setsockopt(socket.IPPROTO_IP, socket.IP_TTL, struct.pack('I', ttl))
             mySocket.settimeout(TIMEOUT)
             try:
                 d = build_packet()
