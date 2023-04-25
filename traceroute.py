@@ -108,7 +108,7 @@ def get_route(hostname):
                     new_df = pd.DataFrame(resp, columns=['Hop Count', 'Try', 'IP', 'Hostname', 'Response Code'])
                     df = pd.concat([df, new_df], ignore_index=True)
                     # append response to your dataframe including hop #, try #, and "timeout" responses as required by the acceptance criteria
-                    print(df)
+                    #print(df)
             except Exception as e:
                 # print (e) # uncomment to view exceptions
                 continue
@@ -132,7 +132,7 @@ def get_route(hostname):
                     resps = [[ttl, tries + 1, addr, hostname, 'ttl exceeded']]
                     new_df = pd.DataFrame(resps, columns=['Hop Count', 'Try', 'IP', 'Hostname', 'Response Code'])
                     df = pd.concat([df, new_df], ignore_index=True)
-                    print(df)
+                    #print(df)
                     # You should update your dataframe with the required column field responses here
 
                 elif requestType == 3:
@@ -143,7 +143,7 @@ def get_route(hostname):
                     new_df = pd.DataFrame(resps, columns=['Hop Count', 'Try', 'IP', 'Hostname', 'Response Code'])
                     df = pd.concat([df, new_df], ignore_index=True)
                     # You should update your dataframe with the required column field responses here
-                    print(df)
+                    #print(df)
 
                 elif requestType == 0:
                     bytes = struct.calcsize("d")
@@ -153,7 +153,7 @@ def get_route(hostname):
                     new_df = pd.DataFrame(resps, columns=['Hop Count', 'Try', 'IP', 'Hostname', 'Response Code'])
                     df = pd.concat([df, new_df], ignore_index=True)
                     # You should update your dataframe with the required column field responses here
-                    print(df)
+                    #print(df)
 
                     return df
                 else:
@@ -162,7 +162,7 @@ def get_route(hostname):
                     new_df = pd.DataFrame(resps, columns=['Hop Count', 'Try', 'IP', 'Hostname', 'Response Code'])
                     df = pd.concat([df, new_df], ignore_index=True)
                     # If there is an exception/error to your if statements, you should append that to your df here
-                    print(df)
+                    #print(df)
 
                 break
 
