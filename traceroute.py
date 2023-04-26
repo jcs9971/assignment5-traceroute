@@ -70,14 +70,14 @@ def build_packet():
     return packet
 
 def get_route(hostname):
-    #timeLeft = TIMEOUT
+    timeLeft = TIMEOUT
     #df = pd.DataFrame(columns=['Hop Count', 'Try', 'IP', 'Hostname', 'Response Code'])
     #destAddr = gethostbyname(hostname)
 
     for ttl in range(1, MAX_HOPS):
         for tries in range(TRIES):
 
-            timeLeft = TIMEOUT
+            #timeLeft = TIMEOUT
             df = pd.DataFrame(columns=['Hop Count', 'Try', 'IP', 'Hostname', 'Response Code'])
             destAddr = gethostbyname(hostname)
             icmp = getprotobyname("icmp")
@@ -112,9 +112,9 @@ def get_route(hostname):
                     new_df = pd.DataFrame(resp, columns=['Hop Count', 'Try', 'IP', 'Hostname', 'Response Code'])
                     df = pd.concat([df, new_df], ignore_index=True)
                     # append response to your dataframe including hop #, try #, and "timeout" responses as required by the acceptance criteria
-                    print(df)
+                    #print(df)
             except Exception as e:
-                print(e) # uncomment to view exceptions
+                #print(e) # uncomment to view exceptions
                 continue
 
             else:
@@ -134,7 +134,7 @@ def get_route(hostname):
                     resps = [[ttl, tries + 1, addr[0], routerhostname, 'ttl exceeded']]
                     new_df = pd.DataFrame(resps, columns=['Hop Count', 'Try', 'IP', 'Hostname', 'Response Code'])
                     df = pd.concat([df, new_df], ignore_index=True)
-                    print(df)
+                    #print(df)
                     # You should update your dataframe with the required column field responses here
 
                 elif requestType == 3:
@@ -145,7 +145,7 @@ def get_route(hostname):
                     new_df = pd.DataFrame(resps, columns=['Hop Count', 'Try', 'IP', 'Hostname', 'Response Code'])
                     df = pd.concat([df, new_df], ignore_index=True)
                     # You should update your dataframe with the required column field responses here
-                    print(df)
+                    #print(df)
 
                 elif requestType == 0:
                     bytes = struct.calcsize("d")
@@ -155,7 +155,7 @@ def get_route(hostname):
                     new_df = pd.DataFrame(resps, columns=['Hop Count', 'Try', 'IP', 'Hostname', 'Response Code'])
                     df = pd.concat([df, new_df], ignore_index=True)
                     # You should update your dataframe with the required column field responses here
-                    print(df)
+                    #print(df)
 
                     return df
                 else:
