@@ -114,7 +114,7 @@ def get_route(hostname):
                     # append response to your dataframe including hop #, try #, and "timeout" responses as required by the acceptance criteria
                     print(df)
             except Exception as e:
-                #print(e) # uncomment to view exceptions
+                print(e) # uncomment to view exceptions
                 continue
 
             else:
@@ -131,36 +131,36 @@ def get_route(hostname):
                     timeSent = struct.unpack("d", recvPacket[28:28 +
                                                                 bytes])[0]
 
-                    resps = [[ttl, tries + 1, addr, routerhostname, 'ttl exceeded']]
+                    resps = [[ttl, tries + 1, addr[0], routerhostname, 'ttl exceeded']]
                     new_df = pd.DataFrame(resps, columns=['Hop Count', 'Try', 'IP', 'Hostname', 'Response Code'])
                     df = pd.concat([df, new_df], ignore_index=True)
-                    #print(df)
+                    print(df)
                     # You should update your dataframe with the required column field responses here
 
                 elif requestType == 3:
                     bytes = struct.calcsize("d")
                     timeSent = struct.unpack("d", recvPacket[28:28 + bytes])[0]
 
-                    resps = [[ttl, tries + 1, addr, routerhostname, 'destination unreachable']]
+                    resps = [[ttl, tries + 1, addr[0], routerhostname, 'destination unreachable']]
                     new_df = pd.DataFrame(resps, columns=['Hop Count', 'Try', 'IP', 'Hostname', 'Response Code'])
                     df = pd.concat([df, new_df], ignore_index=True)
                     # You should update your dataframe with the required column field responses here
-                    #print(df)
+                    print(df)
 
                 elif requestType == 0:
                     bytes = struct.calcsize("d")
                     timeSent = struct.unpack("d", recvPacket[28:28 + bytes])[0]
 
-                    resps = [[ttl, tries + 1, addr, routerhostname, 'success']]
+                    resps = [[ttl, tries + 1, addr[0], routerhostname, 'success']]
                     new_df = pd.DataFrame(resps, columns=['Hop Count', 'Try', 'IP', 'Hostname', 'Response Code'])
                     df = pd.concat([df, new_df], ignore_index=True)
                     # You should update your dataframe with the required column field responses here
-                    #print(df)
+                    print(df)
 
                     return df
                 else:
 
-                    resps = [[ttl, tries + 1, addr, routerhostname, 'error']]
+                    resps = [[ttl, tries + 1, addr[0], routerhostname, 'error']]
                     new_df = pd.DataFrame(resps, columns=['Hop Count', 'Try', 'IP', 'Hostname', 'Response Code'])
                     df = pd.concat([df, new_df], ignore_index=True)
                     # If there is an exception/error to your if statements, you should append that to your df here
