@@ -11,14 +11,12 @@ ICMP_ECHO_REQUEST = 8
 MAX_HOPS = 60
 TIMEOUT = 2.0
 TRIES = 1
-
-
 # The packet that we shall send to each router along the path is the ICMP echo
 # request packet, which is exactly what we had used in the ICMP ping exercise.
 # We shall use the same packet that we built in the Ping exercise
 
 def checksum(string):
-    # In this function we make the checksum of our packet
+# In this function we make the checksum of our packet
     csum = 0
     countTo = (len(string) // 2) * 2
     count = 0
@@ -39,7 +37,6 @@ def checksum(string):
     answer = answer & 0xffff
     answer = answer >> 8 | (answer << 8 & 0xff00)
     return answer
-
 
 def build_packet():
     # In the sendOnePing() method of the ICMP Ping exercise ,firstly the header of our
@@ -71,41 +68,35 @@ def build_packet():
 
 def get_route(hostname):
     timeLeft = TIMEOUT
-    #df = pd.DataFrame(columns=['Hop Count', 'Try', 'IP', 'Hostname', 'Response Code'])
-    #destAddr = gethostbyname(hostname)
+    df = pd.DataFrame(columns=['Hop Count', 'Try', 'IP', 'Hostname', 'Response Code'])
+    destAddr = gethostbyname(hostname)
 
     for ttl in range(1, MAX_HOPS):
         for tries in range(TRIES):
 
-            #timeLeft = TIMEOUT
-            df = pd.DataFrame(columns=['Hop Count', 'Try', 'IP', 'Hostname', 'Response Code'])
-            destAddr = gethostbyname(hostname)
+            # Make a raw socket named mySocket
             icmp = getprotobyname("icmp")
             mySocket = socket(AF_INET, SOCK_RAW, icmp)
-
-            # Make a raw socket named mySocket
-
             mySocket.setsockopt(IPPROTO_IP, IP_TTL, struct.pack('I', ttl))
             mySocket.settimeout(TIMEOUT)
 
             try:
                 d = build_packet()
                 mySocket.sendto(d, (hostname, 0))
-                t = time.time()
+                t= time.time()
                 startedSelect = time.time()
                 whatReady = select.select([mySocket], [], [], timeLeft)
                 howLongInSelect = (time.time() - startedSelect)
-                if whatReady[0] == []:  # Timeout
-                    #print("Request timed out.")
-
+                if whatReady[0] == []:
+                    print("Request timed out.")
                     resp = [[ttl, tries + 1, '*', '*', 'timeout']]
-
                     new_df = pd.DataFrame(resp, columns=['Hop Count', 'Try', 'IP', 'Hostname', 'Response Code'])
                     df = pd.concat([df, new_df], ignore_index=True)
 
                 recvPacket, addr = mySocket.recvfrom(1024)
                 timeReceived = time.time()
                 timeLeft = timeLeft - howLongInSelect
+
                 if timeLeft <= 0:
                     print("Request timed out.")
                     resp = [[ttl, tries + 1, '*', '*', 'timeout']]
@@ -114,10 +105,11 @@ def get_route(hostname):
                     # append response to your dataframe including hop #, try #, and "timeout" responses as required by the acceptance criteria
                     #print(df)
             except Exception as e:
-                #print(e) # uncomment to view exceptions
+                print(e) # uncomment to view exceptions
                 continue
 
             else:
+                ttl = recvPacket[8]
                 icmpHeader = recvPacket[20:28]
                 requestType, code, checksum, packetID, sequence = struct.unpack("bbHHh", recvPacket[20:28])
                 # Fetch the icmp type from the IP packet
@@ -128,9 +120,7 @@ def get_route(hostname):
 
                 if requestType == 11:
                     bytes = struct.calcsize("d")
-                    timeSent = struct.unpack("d", recvPacket[28:28 +
-                                                                bytes])[0]
-
+                    timeSent = struct.unpack("d", recvPacket[28:28 + bytes])[0]
                     resps = [[ttl, tries + 1, addr[0], routerhostname, 'ttl exceeded']]
                     new_df = pd.DataFrame(resps, columns=['Hop Count', 'Try', 'IP', 'Hostname', 'Response Code'])
                     df = pd.concat([df, new_df], ignore_index=True)
@@ -164,7 +154,7 @@ def get_route(hostname):
                     new_df = pd.DataFrame(resps, columns=['Hop Count', 'Try', 'IP', 'Hostname', 'Response Code'])
                     df = pd.concat([df, new_df], ignore_index=True)
                     # If there is an exception/error to your if statements, you should append that to your df here
-                    print(df)
+                    #print(df)
 
                 break
             finally:
